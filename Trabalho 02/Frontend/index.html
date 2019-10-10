@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Page Title</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    
+</head>
+<body>
+    <div id="arquivos">
+        <ul></ul>
+    </div>
+</body>
+<script
+  src="https://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script>
+<script>
+    var path= "";
+    $.ajax({
+        contentType: 'application/json',
+        cache: false,
+        method: 'GET',
+        url: 'http://localhost:3000/arquivos' ,
+        success: function(data){
+            console.log(data.Arquivos);
+            
+
+            for(var i=0; i< data.Arquivos.length; i++){
+                if(data.Arquivos[i][1])
+                    $("#arquivos ul").append("<li class='folder' value='"+data.Arquivos[i][0]+"' style='cursor: pointer;'>"+data.Arquivos[i][0]+"</li>")
+                else{
+                    $("#arquivos ul").append("<li class='file' style='cursor: pointer;'>"+data.Arquivos[i][0]+"</li>")}
+            }
+
+            
+                
+        }
+    });
+
+    $(document).ajaxComplete(function(){
+        $(".folder").click(function(){
+            path = path+"/"+$(this).html();
+            console.log(path)
+            $.ajax({
+                contentType: 'application/json',
+                cache: false,
+                method: 'GET',
+                url: 'http://localhost:3000/arquivos?folder='+path ,
+                success: function(data){
+                    console.log(data.Arquivos);
+                    
+
+                    for(var i=0; i< data.Arquivos.length; i++){
+                        if(data.Arquivos[i][1])
+                            $("#arquivos ul").append("<li class='folder' value='"+data.Arquivos[i][0]+"' style='cursor: pointer;'>"+data.Arquivos[i][0]+"</li>")
+                        else{
+                            $("#arquivos ul").append("<li class='file' style='cursor: pointer;'>"+data.Arquivos[i][0]+"</li>")}
+                    }
+
+                    
+                        
+                }
+            })
+        });
+        $(".file").click(function(){
+            path = path+"/"+$(this).html();
+            console.log(path)
+            $.ajax({
+                contentType: 'application/json',
+                cache: false,
+                method: 'GET',
+                url: 'http://localhost:3000/baixar?folder='+path ,
+                success: function(data){
+                    console.log("Baixa Labaxurias");
+                    
+
+
+                    
+                        
+                }
+            })
+        });
+    })
+</script>
+</html>
