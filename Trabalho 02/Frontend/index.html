@@ -12,6 +12,14 @@
     <div id="arquivos">
         <ul></ul>
     </div>
+    <div id="criarPasta">
+        <label>Nome da pasta: </label>
+        <input type="text"/>
+        <button >
+            Criar Pasta
+        </button>
+    </div>
+    
 </body>
 <script
   src="https://code.jquery.com/jquery-3.4.1.js"
@@ -55,10 +63,12 @@
 
                     for(var i=0; i< data.Arquivos.length; i++){
                         if(data.Arquivos[i][1])
-                            $("#arquivos ul").append("<li class='folder' value='"+data.Arquivos[i][0]+"' style='cursor: pointer;'>"+data.Arquivos[i][0]+"</li>")
+                            $("#arquivos ul").append("<li class='folder' value='"+data.Arquivos[i][0]+"' style='cursor: pointer;'>"+data.Arquivos[i][0]+"</li><button class='apagarPasta'>Apagar</button>")
                         else{
-                            $("#arquivos ul").append("<li class='file' style='cursor: pointer;'>"+data.Arquivos[i][0]+"</li>")}
+                            $("#arquivos ul").append("<li class='file' style='cursor: pointer;'>"+data.Arquivos[i][0]+"</li><button class='apagarArquivo'>Apagar</button><button class='download'>DOWNLOAD</button>")}
                     }
+
+                    $("#arquivos ul").append('<form action="http://localhost:3000/upload" method="post" enctype="multipart/form-data"> <input type="file" name="filetoupload"><br><input type="submit"></form>')
 
                     
                         
@@ -72,7 +82,7 @@
                 contentType: 'application/json',
                 cache: false,
                 method: 'GET',
-                url: 'http://localhost:3000/baixar?folder='+path ,
+                url: 'http://localhost:3000/download?folder='+path ,
                 success: function(data){
                     console.log("Baixa Labaxurias");
                     
@@ -83,6 +93,78 @@
                 }
             })
         });
+
+        $("#criarPasta button").click(function(){
+            let folderName = $("#criarPasta input").val();
+            $.ajax({
+                contentType: 'application/json',
+                cache: false,
+                method: 'GET',
+                url: 'http://localhost:3000/createFolder?folder='+path+'&folderName='+folderName ,
+                success: function(data){
+                    console.log("cria Labaxurias");
+                    
+
+
+                    
+                        
+                }
+            })
+        })
+
+        $(".apagarPasta").click(function(){
+            path = path+"/"+$(this).sibling("li").html();
+            $.ajax({
+                contentType: 'application/json',
+                cache: false,
+                method: 'GET',
+                url: 'http://localhost:3000/deleteFile?folder='+path,
+                success: function(data){
+                    console.log("cria Labaxurias");
+                    
+
+
+                    
+                        
+                }
+            })
+        })
+
+        $(".apagarArquivo").click(function(){
+            nameFolderOrFile = $(this).sibling("li").html();
+            $.ajax({
+                contentType: 'application/json',
+                cache: false,
+                method: 'GET',
+                url: 'http://localhost:3000/deleteFile?folder='+path,
+                success: function(data){
+                    console.log("cria Labaxurias");
+                    
+
+
+                    
+                        
+                }
+            })
+        })
+
+        $(".download").click(function(){
+            nameFolderOrFile = $(this).sibling("li").html();
+            $.ajax({
+                contentType: 'application/json',
+                cache: false,
+                method: 'GET',
+                url: 'http://localhost:3000/download?folder='+path,
+                success: function(data){
+                    console.log("cria Labaxurias");
+                    
+
+
+                    
+                        
+                }
+            })
+        })
     })
 </script>
 </html>
